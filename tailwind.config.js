@@ -14,6 +14,11 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                "maga-black": "#070707",
+                "maga-gray": "#6A7789",
+                "maga-orange": "#FF6B18",
+            },
         },
     },
 
