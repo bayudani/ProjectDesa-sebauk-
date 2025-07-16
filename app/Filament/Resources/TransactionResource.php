@@ -27,28 +27,37 @@ class TransactionResource extends Resource
         return $form
             ->schema([
                 // Form fields for the Transaction resource
-                Forms\Components\TextInput::make('product_id')
+                Forms\Components\Select::make('product_id')
+                    ->relationship('product', 'name')
+                    ->required(),
+                Forms\Components\TextInput::make('customer_name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
+                Forms\Components\TextInput::make('customer_address')
+                    ->nullable()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('customer_phone')
+                    ->nullable()                
+                    ->maxLength(255),                   
                 Forms\Components\TextInput::make('quantity')
+                    ->default(1)
+                    ->numeric()
+                    ->required(),
+                Forms\Components\TextInput::make('total_amount')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('total_price')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(50),
-                Forms\Components\TextInput::make('transaction_date')
-                    ->required()
-                    ->dateTime(),
+                    ->numeric()
+                    ->maxLength(20),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'completed' => 'Completed',
+                        'cancelled' => 'Cancelled', 
+                    ])                  
+                    ->required(),               
                 Forms\Components\TextInput::make('payment_method')
-                    ->required()
-                    ->maxLength(50),
-                Forms\Components\FileUpload::make('proof_of_transaction')
+                    ->nullable()
+                    ->maxLength(255),
+                Forms\Components\FileUpload::make('proof of transaction')
                     ->nullable()
                     ->image()
                     ->maxSize(1024)
@@ -65,13 +74,28 @@ class TransactionResource extends Resource
                     ->label('Product Name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('customer_name')
                     ->label('Customer Name')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('customer_address')
+                    ->label('Customer Address')
+                    ->limit(50)
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('customer_phone')
+                    ->label('Customer Phone')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('product.category.name')
+                    ->label('Category')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\ImageColumn::make('product.image')
+                    ->label('Product Image'),
                 Tables\Columns\TextColumn::make('quantity')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('total_price')
+                Tables\Columns\TextColumn::make('total_amount')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->sortable(),
@@ -80,15 +104,13 @@ class TransactionResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_method')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('proof_of_transaction')
+                Tables\Columns\ImageColumn::make('proof of transaction')
                     ->label('Proof of Transaction')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable(),
+            
             ])
             ->filters([
                 // filter by product
