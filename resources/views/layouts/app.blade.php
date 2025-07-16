@@ -33,7 +33,7 @@
             </main>
 
             <footer>
-                
+                <livewire:layout.footer />
             </footer>
         </div>
     </body>
